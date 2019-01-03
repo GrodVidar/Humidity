@@ -1,21 +1,44 @@
-// Humidity try3.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
 
 #include "pch.h"
-#include <iostream>
+#include "Values.h"
+#include <fstream>
 
 int main()
 {
-    std::cout << "Hello World!\n"; 
+	std::vector <Values*> worth;
+	Values vals;
+	std::string s_date, s_time, s_inOut, s_temperature, s_humidity;
+	std::ifstream text("TempFuktDataSemi.txt");
+	bool texteof=false;
+	bool b_inOut;
+	if (text.is_open())
+	{
+		while(!text.eof())
+		{
+			std::getline(text, s_date, ' ');
+			std::getline(text, s_time, ';');
+			std::getline(text, s_inOut, ';');
+			std::getline(text, s_temperature, ';');
+			std::getline(text, s_humidity);
+			if (s_inOut == "Inne")
+			{
+				b_inOut = true;
+			}
+			else
+			{
+				b_inOut = false;
+			}
+			worth.push_back(new Values(s_date, s_time, b_inOut, std::stof(s_temperature), std::stoi(s_humidity)));
+		}
+	}
+	else
+	{
+		std::cout << "ePiC fAiL Xdddd"<< std::endl;
+	}
+	
+	/*for (int i = 0; i < worth.size(); i++)
+	{
+		worth[i]->printout();
+	}*/
+
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
