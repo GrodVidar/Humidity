@@ -2,10 +2,6 @@
 #include "pch.h"
 #include "Values.h"
 #include <fstream>
-	void hejhasse()
-	{
-		std::cout << "hej";
-	}
 
 int main()
 {
