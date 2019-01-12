@@ -11,7 +11,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#define LOG(x,y) std::cout << "xXxXxXxX" << x << y << "XxXxXxXxX"<< std::endl;
+#define LOG(x,y) std::cout << "xXxXxXxX" << x << ' ' << y << "XxXxXxXxX"<< std::endl;
 
 // TODO: add headers that you want to pre-compile here
 
