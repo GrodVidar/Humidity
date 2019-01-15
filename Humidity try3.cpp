@@ -151,7 +151,7 @@ void mergeHumidity(Middle** medium, int leftLow, int leftHigh, int rightHigh)
 	{
 		medium[j] = temp[j - leftLow];
 	}
-	
+	delete[]temp;
 }
 
 void mergeSortTemperature(Middle** medium, int low, int high)
@@ -223,6 +223,8 @@ int main()
 				worthIn.push_back(new Values(s_day, s_time, std::stod(s_temperature), std::stoi(s_humidity)));
 				if (tempDayIn == std::stol(test))
 				{
+					tempTempIn = std::stod(s_temperature);
+					tempHumidIn = std::stoi(s_humidity);
 					tempusIn = tempusIn + tempTempIn;
 					humidIn = humidIn + tempHumidIn;
 					++counterIn;					
@@ -245,6 +247,8 @@ int main()
 				worthOut.push_back(new Values(s_day, s_time, std::stod(s_temperature), std::stoi(s_humidity)));
 				if (tempDayOut == std::stol(test))
 				{
+					tempTempOut = std::stod(s_temperature);
+					tempHumidOut = std::stoi(s_humidity);
 					tempusOut = tempusOut + tempTempOut;
 					humidOut = humidOut + tempHumidOut;
 					counterOut++;
@@ -310,6 +314,7 @@ int main()
 			{
 				SortingArray[i]->printout();
 			}
+			delete[] SortingArray;
 			break;
 		case(4):
 			SortingArray = new Middle*[medelIn.size()];
@@ -322,6 +327,7 @@ int main()
 			{
 				SortingArray[i]->printout();
 			}
+			delete[] SortingArray;
 			break;
 		case(5):
 			SortingArray = new Middle*[medelOut.size()];
@@ -334,6 +340,7 @@ int main()
 			{
 				SortingArray[i]->printout();
 			}
+			delete[] SortingArray;
 			break;
 		case(6):
 			SortingArray = new Middle*[medelOut.size()];
@@ -346,6 +353,7 @@ int main()
 			{
 				SortingArray[i]->printout();
 			}
+			delete[] SortingArray;
 			break;
 
 		case(0):
