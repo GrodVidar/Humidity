@@ -4,24 +4,30 @@
 #include "Middle.h"
 #include <fstream>
 
-void binary_search(std::vector <Middle*> worth, int high, int low, long int year)
+void binary_search(std::vector <Middle*> worth, int high, int low, long int date)
 {
-	int temp = (high+low)/2;
-	//std::cout << worth[temp]->get_date();
-	if (year < worth[temp]->get_date())
+	if (low<=high)
 	{
-		high = temp;
-		binary_search(worth, high, low, year);
+		int temp = (high + low) / 2;
+
+		if (date < worth[temp]->get_date())
+		{
+			high = temp - 1;
+			binary_search(worth, high, low, date);
+		}
+		else if (date > worth[temp]->get_date())
+		{
+			low = temp + 1;
+			binary_search(worth, high, low, date);
+		}
+		else if (date == worth[temp]->get_date())
+		{
+			worth[temp]->printout();
+		}
 	}
-	else if(year > worth[temp]->get_date())
+	else
 	{
-		low = temp;
-		//if (low == temp)low = high;
-		binary_search(worth, high, low, year);
-	}
-	else if (year == worth[temp]->get_date())
-	{	
-		worth[temp]->printout();
+		std::cout << "That date is not registered!" << std::endl;
 	}
 }
 
@@ -57,25 +63,139 @@ void searchMedel(std::vector <Middle*> v_medel)
 		else
 		{
 			std::cout << "That date is not registered." << std::endl;
+			b_Medel = false;
 		}
 	} while (b_Medel);
 }
+void mergeTemperature(Middle** medium, int leftLow, int leftHigh, int rightHigh)
+{
+	int rightLow = leftHigh + 1;
+	int length = rightHigh - leftLow + 1;
+	Middle** temp = new Middle*[length];
+	int i = 0;
+	int left = leftLow;
+	int right = rightLow;
+	while (left <= leftHigh && right <= rightHigh)
+	{
+		if (medium[left]->get_temp() < medium[right]->get_temp())
+		{
+			temp[i] = medium[left];
+			left++;
+			i++;
+		}
+		else
+		{
+			temp[i] = medium[right];
+			right++;
+			i++;
+		}
+	}
+
+	while (left <= leftHigh)
+	{
+		temp[i] = medium[left];
+		left++;
+		i++;
+	}
+	while (right <= rightHigh)
+	{
+		temp[i] = medium[right];
+		right++;
+		i++;
+	}
+
+	for (int j = leftLow; j <= rightHigh; j++)
+	{
+		medium[j] = temp[j - leftLow];
+	}
+
+}
+void mergeHumidity(Middle** medium, int leftLow, int leftHigh, int rightHigh)
+{
+	int rightLow = leftHigh + 1;
+	int length = rightHigh - leftLow + 1;
+	Middle** temp = new Middle*[length];
+	int i = 0;
+	int left = leftLow;
+	int right = rightLow;
+	while (left <= leftHigh && right <= rightHigh)
+	{
+		if (medium[left]->get_humidity() < medium[right]->get_humidity())
+		{
+			temp[i] = medium[left];
+			left++;
+			i++;
+		}
+		else
+		{
+			temp[i] = medium[right];
+			right++;
+			i++;
+		}
+	}
+
+	while (left <= leftHigh)
+	{
+		temp[i] = medium[left];
+		left++;
+		i++;
+	}
+	while (right <= rightHigh)
+	{
+		temp[i] = medium[right];
+		right++;
+		i++;
+	}
+	
+	for (int j = leftLow; j <= rightHigh; j++)
+	{
+		medium[j] = temp[j - leftLow];
+	}
+	
+}
+
+void mergeSortTemperature(Middle** medium, int low, int high)
+{
+	int choice;
+	bool hit = false;
+	int mid;
+	if (low < high)
+	{
+		mid = (high + low) / 2;
+		mergeSortTemperature(medium, low, mid);
+		mergeSortTemperature(medium, mid + 1, high);
+		mergeTemperature(medium, low, mid, high);
+	}
+}
+
+void mergeSortHumidity(Middle** medium, int low, int high)
+{
+	int choice;
+	bool hit=false;
+	int mid;
+	if (low < high)
+	{
+		mid = (high + low) / 2;
+		mergeSortHumidity(medium, low, mid);
+		mergeSortHumidity(medium, mid + 1, high);
+		mergeHumidity(medium, low, mid, high);
+	}
+}
+
 int main()
 {
 	std::vector <Values*> worthIn;
 	std::vector <Values*> worthOut;
 	std::vector <Middle*> medelIn;
 	std::vector <Middle*> medelOut;
-	bool readIn=true;
-	Values vals;
+	Middle** SortingArray;
+	bool readIn=true, texteof=false;
 	double tempusIn=0.0,tempusOut=0.0,tempTempIn=0.0, tempTempOut=0.0;
-	int humidIn=0,humidOut=0, tempHumidIn=0, tempHumidOut=0;
+	int humidIn=0,humidOut=0, tempHumidIn=0, tempHumidOut=0, counterIn = 1,counterOut=1;
 	std::string test;
-	int counterIn = 0,counterOut=0;
 	long int highIn,highOut, tempDayIn = 0, tempDayOut = 0;
 	std::string s_year, s_month, s_day, s_time, s_inOut, s_temperature, s_humidity;
 	std::ifstream text("tempdata4.txt");
-	bool texteof=false;
 	long int date;
 	if (text.is_open())
 	{
@@ -100,7 +220,7 @@ int main()
 			}
 			if (s_inOut == "Inne")
 			{
-				worthIn.push_back(new Values(s_day, s_time, std::stof(s_temperature), std::stoi(s_humidity)));
+				worthIn.push_back(new Values(s_day, s_time, std::stod(s_temperature), std::stoi(s_humidity)));
 				if (tempDayIn == std::stol(test))
 				{
 					tempusIn = tempusIn + tempTempIn;
@@ -109,13 +229,12 @@ int main()
 				}
 				else
 				{
-					if (counterIn == 0) counterIn = 1;
 					tempusIn = tempusIn / counterIn;
 					humidIn = humidIn / counterIn;
 					medelIn.push_back(new Middle(tempusIn, humidIn, tempDayIn));
-					tempusIn = 0;
-					humidIn = 0;
-					counterIn = 0;
+					tempusIn = std::stod(s_temperature);
+					humidIn = std::stoi(s_humidity);
+					counterIn = 1;
 					tempTempIn = std::stod(s_temperature);
 					tempHumidIn = std::stoi(s_humidity);
 					tempDayIn = std::stol(test);
@@ -123,7 +242,7 @@ int main()
 			}
 			else
 			{
-				worthOut.push_back(new Values(s_day, s_time, std::stof(s_temperature), std::stoi(s_humidity)));
+				worthOut.push_back(new Values(s_day, s_time, std::stod(s_temperature), std::stoi(s_humidity)));
 				if (tempDayOut == std::stol(test))
 				{
 					tempusOut = tempusOut + tempTempOut;
@@ -132,16 +251,15 @@ int main()
 				}
 				else
 				{
-					if (counterOut == 0) counterOut = 1;
 					tempusOut = tempusOut/counterOut;
 					humidOut = humidOut/counterOut;
 					medelOut.push_back(new Middle(tempusOut, humidOut, tempDayOut));
 					tempDayOut = std::stol(test);
 					tempTempOut = std::stod(s_temperature);
 					tempHumidOut = std::stoi(s_humidity);
-					humidOut = 0;
-					tempusOut = 0;
-					counterOut = 0;
+					humidOut = std::stoi(s_humidity);
+					tempusOut = std::stod(s_temperature);
+					counterOut = 1;
 				}
 			}
 		}
@@ -165,53 +283,12 @@ int main()
 		std::cout << "ePiC fAiL Xdddd"<< std::endl;
 	}
 	text.close();
-	//search_day(worth);
-
-
-	//std::cout << "--------Inside---------" << std::endl << std::endl;
-	//for (int i = 0; i < worth.size(); i++)
-	//{
-	//	if (worth[i]->get_inOut() == true)
-	//	{
-	//		worth[i]->printout();
-	//	}
-	//	
-	//}
-	//std::cout << "----------Outside-----------" << std::endl << std::endl;
-	//for (int i = 0; i < worth.size(); i++)
-	//{
-	//	if (worth[i]->get_inOut() == false)
-	//	{
-	//		worth[i]->printout();
-	//	}
-	//}
-	/*for (int i = 0; i < worth.size(); i++)
-	{
-		printout_outside();
-	}*/
-	/*for (int i = 0; i < worth.size(); i++)
-	{
-		worth[i]->printout();
-	}*/	
-
-	/*for (int i = 0; i < medelIn.size(); i++)
-	{
-		medelIn[i]->set_date();
-		medelIn[i]->printout();
-	}*/
-
-	/*for (int i = 0; i < medelIn.size(); i++)
-	{
-		medelIn[i]->printout();
-	}*/
-		//std::cout << medelOut[0]->get_date() << "\n" << medelOut[highOut]->get_date() << std::endl;
-	
 	int a;
 	bool gameOn = true;
 	//this switch is the UI
 	do
 	{
-		std::cout << "what do you want to do? \n1.search middle values inside 2. search middle values outside 3. exit" << std::endl;
+		std::cout << "what do you want to do? \n1. Search average values inside\n2. Search average values outside\n3. Sort humidity inside\n4. Sort temperature inside\n5. Sort humidity outside\n6. Sort temperature outside\n0. exit" << std::endl;
 		std::cin >> a;
 		switch (a)
 		{
@@ -222,6 +299,56 @@ int main()
 			searchMedel(medelOut);
 			break;
 		case(3):
+			//MergeSort the humidity inside according to average humidity
+			SortingArray = new Middle*[medelIn.size()];
+			for (int i = 0; i < medelIn.size(); i++)
+			{
+				SortingArray[i] = medelIn[i];
+			}
+			mergeSortHumidity(SortingArray, 0, medelIn.size()-1);
+			for (int i = 0; i < medelIn.size(); i++)
+			{
+				SortingArray[i]->printout();
+			}
+			break;
+		case(4):
+			SortingArray = new Middle*[medelIn.size()];
+			for (int i = 0; i < medelIn.size(); i++)
+			{
+				SortingArray[i] = medelIn[i];
+			}
+			mergeSortTemperature(SortingArray, 0, medelIn.size() - 1);
+			for (int i = 0; i < medelIn.size(); i++)
+			{
+				SortingArray[i]->printout();
+			}
+			break;
+		case(5):
+			SortingArray = new Middle*[medelOut.size()];
+			for (int i = 0; i < medelOut.size(); i++)
+			{
+				SortingArray[i] = medelOut[i];
+			}
+			mergeSortHumidity(SortingArray, 0, medelOut.size() - 1);
+			for (int i = 0; i < medelOut.size(); i++)
+			{
+				SortingArray[i]->printout();
+			}
+			break;
+		case(6):
+			SortingArray = new Middle*[medelOut.size()];
+			for (int i = 0; i < medelOut.size(); i++)
+			{
+				SortingArray[i] = medelOut[i];
+			}
+			mergeSortTemperature(SortingArray, 0, medelOut.size() - 1);
+			for (int i = 0; i < medelOut.size(); i++)
+			{
+				SortingArray[i]->printout();
+			}
+			break;
+
+		case(0):
 			gameOn = false;
 			break;
 		default:
