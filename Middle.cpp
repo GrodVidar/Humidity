@@ -3,7 +3,8 @@
 
 
 
-
+/*printout is used both in this class and in Values, it gives the user information
+about the data they have requested.*/
 void Middle::printout()
 {
 	std::cout << "The average temperature of:" << this->date << ", is: " << this->temp  << " Celcius"<< std::endl;
