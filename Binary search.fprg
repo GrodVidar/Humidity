@@ -4,9 +4,9 @@
         <attribute name="name" value=""/>
         <attribute name="authors" value="vexxa"/>
         <attribute name="about" value=""/>
-        <attribute name="saved" value="2019-01-12 03:53:49 PM"/>
+        <attribute name="saved" value="2019-01-16 10:17:16 AM"/>
         <attribute name="created" value="dmV4eGE7TEFQVE9QLUJWRVBQRVRFOzIwMTktMDEtMTI7MDM6Mzk6MjcgUE07Mjk1Mg=="/>
-        <attribute name="edited" value="dmV4eGE7TEFQVE9QLUJWRVBQRVRFOzIwMTktMDEtMTI7MDM6NTM6NDkgUE07MTszMDYw"/>
+        <attribute name="edited" value="dmV4eGE7TEFQVE9QLUJWRVBQRVRFOzIwMTktMDEtMTY7MTA6MTc6MTYgQU07MjszMDQy"/>
     </attributes>
     <function name="Main" type="None" variable="">
         <parameters/>
@@ -23,8 +23,8 @@
             <input variable="vector[4]"/>
             <input variable="vector[5]"/>
             <input variable="vector[6]"/>
-            <assign variable="low" expression="0"/>
-            <assign variable="high" expression="6"/>
+            <assign variable="low" expression="vector[0]"/>
+            <assign variable="high" expression="vector[6]"/>
             <assign variable="middle" expression="high+low/2"/>
             <comment text="here you want to search for the number in the array, afterwards the program should find it using binary search."/>
             <input variable="search"/>
@@ -40,6 +40,7 @@
                     </else>
                 </if>
             </do>
+            <output expression="vector[middle]" newline="True"/>
         </body>
     </function>
 </flowgorithm>
