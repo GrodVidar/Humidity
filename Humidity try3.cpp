@@ -280,6 +280,7 @@ void meteorologicalDates(std::vector <Middle*> medium)
 				if (medium[i]->get_temp() < 10.f && medium[i + 1]->get_temp() < 10.f && medium[i + 2]->get_temp() < 10.f && medium[i + 3]->get_temp() < 10.f && medium[i+4]->get_temp() < 10.f)
 				{
 					medium[i]->printout();
+					pressToCont();
 					searching = false;
 				}
 				else
@@ -289,6 +290,7 @@ void meteorologicalDates(std::vector <Middle*> medium)
 				if (i == medium.size() - 1)
 				{
 					std::cout << "No meteorological autumn was found." << std::endl;
+					pressToCont();
 					searching = false;
 				}
 			} while (searching);
@@ -299,6 +301,7 @@ void meteorologicalDates(std::vector <Middle*> medium)
 				if (medium[i]->get_temp() < 0 && medium[i + 1]->get_temp() < 0 && medium[i + 2]->get_temp() < 0 && medium[i + 3]->get_temp() < 0 && medium[i + 4]->get_temp() < 0)
 				{
 					medium[i]->printout();
+					pressToCont();
 					searching = false;
 				}
 				else
@@ -308,6 +311,7 @@ void meteorologicalDates(std::vector <Middle*> medium)
 				if (i == medium.size() - 1)
 				{
 					std::cout << "No meteorological winter was found." << std::endl;
+					pressToCont();
 					searching = false;
 				}
 			} while (searching);
@@ -324,20 +328,31 @@ void meteorologicalDates(std::vector <Middle*> medium)
 
 int main()
 {
+	/*The Values class and vectors are optional to this project and are used if you wan't data from
+	a specified line that was read from the file. They can also be modified to get functions such as
+	comparing temperature or humidity from inside or outside.*/
 	std::vector <Values*> worthIn;
 	std::vector <Values*> worthOut;
+
+	/*The Middle class stores the average temperature, humidity and mold risk inside and outside
+	the program mainly uses these to search and sort them after their data.*/
 	std::vector <Middle*> medelIn;
 	std::vector <Middle*> medelOut;
+
+	/*The sortingArray is a temporary array that we later on copy the data from the two Middle
+	objects for sorting them without changing the indexes of the class-objects.*/
 	Middle** SortingArray;
-	bool readIn=true, texteof=false;
+
+	/*data-types*/
 	double tempusIn=0.0,tempusOut=0.0,tempTempIn=0.0, tempTempOut=0.0, moldIn=0.0, tempMoldIn=0.0, moldOut=0.0, tempMoldOut=0.0,temporaryMoldIn=0.0, temporaryMoldOut=0.0;
 	int humidIn=0,humidOut=0, tempHumidIn=0, tempHumidOut=0, counterIn = 1,counterOut=1;
-	std::string test;
-	long int highIn,highOut, tempDayIn = 0, tempDayOut = 0;
-	std::string s_year, s_month, s_day, s_time, s_inOut, s_temperature, s_humidity;
+	long int tempDayIn = 0, tempDayOut = 0;
+	std::string s_year, s_month, s_day, s_time, s_inOut, s_temperature, s_humidity, test;
 	std::ifstream text("tempdata4.txt");
-	long int date;
-
+	/*This part of the main program is where it reads in from the file, in this case its from a
+	.txt-file called "tempdata4.txt". The "test"-string variable uses substrings to store only
+	the numbers from the date in the file, so that "2016-06-03" would be "20160603"
+	Then we use this to pushback to our classes.*/
 	if (text.is_open())
 	{
 		while(!text.eof())
@@ -350,6 +365,7 @@ int main()
 			std::getline(text, s_inOut, ',');
 			std::getline(text, s_temperature, ',');
 			std::getline(text, s_humidity);
+			/*whats within this if-Statement is only used once to define the datatypes used.*/
 			if (tempDayIn == 0)
 			{
 				tempDayIn = std::stol(test);
@@ -358,12 +374,17 @@ int main()
 				tempTempOut = std::stof(s_temperature);
 				tempHumidOut = std::stoi(s_humidity);
 				tempHumidIn = std::stoi(s_humidity);
-				//tempMoldIn = (pow(tempTempIn, 3)*-0.0015) + (pow(tempTempIn, 2)*0.1193) - (tempTempIn*2.9878) + 102.69;
-				//tempMoldOut = (pow(tempTempOut, 3)*-0.0015) + (pow(tempTempOut, 2)*0.1193) - (tempTempOut*2.9878) + 102.69;
+				tempMoldIn = (pow(tempTempIn, 3)*-0.0015) + (pow(tempTempIn, 2)*0.1193) - (tempTempIn*2.9878) + 102.69;
+				tempMoldOut = (pow(tempTempOut, 3)*-0.0015) + (pow(tempTempOut, 2)*0.1193) - (tempTempOut*2.9878) + 102.69;
 			}
+			//The if-statement checks if the data from the line is from "indoors" or "outdoors".
+			//This checks the data from indoors.
 			if (s_inOut == "Inne")
 			{
 				worthIn.push_back(new Values(s_day, s_time, std::stof(s_temperature), std::stoi(s_humidity)));
+				/*We add all the separated data together here so we can later divide by how many
+				times we've been reading in from ONE-day, the if-statement checks
+				when the file has come to a new day.*/
 				if (tempDayIn == std::stol(test))
 				{
 					tempTempIn = std::stof(s_temperature);
@@ -372,8 +393,12 @@ int main()
 					tempusIn = tempusIn + tempTempIn;
 					humidIn = humidIn + tempHumidIn;
 					tempMoldIn = tempMoldIn + temporaryMoldIn;
-					++counterIn;					
+					counterIn++;					
 				}
+				/*When the file starts reading a new day, we divide all our values
+				with the counter, that only counts ++ for each read we've done for a
+				whole day. then we store the average value in our Middle-class.
+				then reset the datatypes to match the first data on the new day.*/
 				else
 				{
 					tempusIn = tempusIn / counterIn;
@@ -390,6 +415,8 @@ int main()
 					tempMoldIn = -0.0015*(pow(tempTempIn, 3)) + 0.1193*(pow(tempTempIn, 2)) - (2.9878*tempTempIn) + 102.69;
 				}
 			}
+			/*everything below here is exactly as the if-"Inne"-statement above,
+			except this is the data from outdoors.*/
 			else
 			{
 				worthOut.push_back(new Values(s_day, s_time, std::stof(s_temperature), std::stoi(s_humidity)));
@@ -420,7 +447,8 @@ int main()
 				}
 			}
 		}
-
+		/*This if statement is used because the last day the file reads in never gets to
+		the else-statement, since the file doesnt read in a day after the last one.*/
 		if (counterIn == 0) counterIn = 1;
 		tempusIn = tempusIn / counterIn;
 		humidIn = humidIn / counterIn;
@@ -440,11 +468,14 @@ int main()
 		tempusOut = 0;
 		counterOut = 0;
 	}
+	//troubleshooting else-statement.
 	else
 	{
 		std::cout << "ePiC fAiL Xdddd"<< std::endl;
 	}
 	text.close();
+	/*The int choice is what the user inputs as a choice, and the gameOn keeps the
+	program running until the user exits the game by pressing '0'.*/
 	int choice;
 	bool gameOn = true;
 	//this switch is the UI
@@ -552,10 +583,12 @@ int main()
 			pressToCont();
 			delete[] SortingArray;
 			break;
+			//calls the meteorologicalDates method, since winter and autumn
+			//can't be decided from indoors we only use data from outdoors.
 		case(9):
 			meteorologicalDates(medelOut);
-			pressToCont();
 			break;
+			//EXITs the program.
 		case(0):
 			gameOn = false;
 			for (int i = 0; i < worthIn.size(); i++)
@@ -575,6 +608,7 @@ int main()
 				delete medelOut[i];
 			}
 			break;
+			//failsafe if user inputs wrong numbers.
 		default:
 			std::cout << "That option is not available" << std::endl;
 			pressToCont();
