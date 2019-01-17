@@ -475,13 +475,13 @@ int main()
 	}
 	text.close();
 	/*The int choice is what the user inputs as a choice, and the gameOn keeps the
-	program running until the user exits the game by pressing '0'.*/
+	program running until the user exits the game by inputting '0'.*/
 	int choice;
 	bool gameOn = true;
 	//this switch is the UI
 	do
 	{
-		std::cout << "What do you want to do? \n1. Search average values inside\n2. Search average values outside\n3. Sort humidity inside\n4. Sort temperature inside\n5. Sort by risk of mold inside\n6. Sort humidity outside\n7. Sort temperature outside\n8. Sort by risk of mold outside\n9. Check when meteorological dates happen\n0. exit" << std::endl;
+		std::cout << "What do you want to do? \n1. Search average values inside\n2. Search average values outside\n3. Sort by humidity inside\n4. Sort by temperature inside\n5. Sort by risk of mold inside\n6. Sort by humidity outside\n7. Sort by temperature outside\n8. Sort by risk of mold outside\n9. Check when meteorological dates happen\n0. Exit" << std::endl;
 		std::cin >> choice;
 		switch (choice)
 		{

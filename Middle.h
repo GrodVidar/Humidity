@@ -1,6 +1,7 @@
 #pragma once
 class Middle
 {	
+	//Data-types of Middle class.
 	float temp;
 	double mold;
 	int result, humidity;

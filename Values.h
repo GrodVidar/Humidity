@@ -1,6 +1,7 @@
 #pragma once
 class Values
 {
+	//Data-types of Values class.
 	std::string time, date;
 	float temperature;
 	int humidity, year, month, day;
@@ -18,8 +19,6 @@ public:
 
 		return this->i_date;
 	}
-
-	//void averageTemp();
 	~Values();
 
 };
