@@ -558,6 +558,22 @@ int main()
 			break;
 		case(0):
 			gameOn = false;
+			for (int i = 0; i < worthIn.size(); i++)
+			{
+				delete worthIn[i];
+			}
+			for (int i = 0; i < worthOut.size(); i++)
+			{
+				delete worthOut[i];
+			}
+			for (int i = 0; i < medelIn.size(); i++)
+			{
+				delete medelIn[i];
+			}
+			for (int i = 0; i < medelOut.size(); i++)
+			{
+				delete medelOut[i];
+			}
 			break;
 		default:
 			std::cout << "That option is not available" << std::endl;
