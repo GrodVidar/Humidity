@@ -22,5 +22,5 @@ the lines look something like this:
 2016-05-31 14:05:29,Inne,24.9,42  
 2016-05-31 14:05:42,Ute,25.3,39  
   
-The .fprg-file in the repository is a flowgorithm-file which has a flowchart of the binary search method.
+The .fprg-file in the repository is a flowgorithm-file which has a flowchart of the binary search method.  
 The TempFuktDataSemi.txt-file is a shortened file for troubleshooting the program.
