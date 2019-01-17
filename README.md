@@ -1,6 +1,6 @@
 # Humidity
-The program uses a .txt-file calles "tempdata4.txt" which has values sorted by date with information about
-date
+The program uses a .txt-file calles "tempdata4.txt" which has values sorted by date with information about\n
+date\n
 time
 location(indoors/outdoors)
 temperature
